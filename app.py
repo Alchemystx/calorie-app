@@ -16,7 +16,7 @@ def log_meal_to_gsheets(dish_idea, calories, protein, carbs, fat, breakdown):
     conn = get_gsheets_connection()
     
     # Read existing sheet data
-    existing_data = conn.read(ttl=0)
+    existing_data = conn.read(worksheet="Sheet1", ttl=0)
     
     now = datetime.datetime.now()
     new_row = pd.DataFrame([{
@@ -32,12 +32,12 @@ def log_meal_to_gsheets(dish_idea, calories, protein, carbs, fat, breakdown):
     
     # Append the new row and update sheet
     updated_data = pd.concat([existing_data, new_row], ignore_index=True)
-    conn.update(data=updated_data)
+    conn.update(worksheet="Sheet1", data=updated_data)
 
 def get_daily_logs_from_gsheets(selected_date):
     try:
         conn = get_gsheets_connection()
-        df = conn.read(ttl=0)
+        df = conn.read(worksheet="Sheet1", ttl=0)
         if df.empty:
             return []
         
