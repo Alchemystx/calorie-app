@@ -64,7 +64,7 @@ def analyze_meal(image: Image.Image, general_idea: str):
     image.save(image_bytes, format="JPEG")
     image_part = types.Part.from_bytes(data=image_bytes.getvalue(), mime_type="image/jpeg")
     
-	prompt = f"""
+    prompt = f"""
     Analyze this meal photo along with the user's general description and weights.
     User description/weight details: "{general_idea}"
 
