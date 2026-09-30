@@ -88,7 +88,7 @@ def analyze_meal(image: Image.Image, general_idea: str):
     }}
     """
 
-    MODELS_TO_TRY = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash"]
+    MODELS_TO_TRY = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.5-flash", "gemini-2.0-flash-lite"]
     response = None
     last_error = None
 
