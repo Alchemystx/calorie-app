@@ -58,7 +58,7 @@ def analyze_meal(image: Image.Image, general_idea: str):
 
     client = genai.Client(api_key=api_key)
 	
-	# CHANGE 2: convert PIL Image to bytes
+    # CHANGE 2: convert PIL Image to bytes
     import io
     image_bytes = io.BytesIO()
     image.save(image_bytes, format="JPEG")
@@ -88,18 +88,28 @@ def analyze_meal(image: Image.Image, general_idea: str):
     }}
     """
 
-    # CHANGE 3: use image_part, add try/except
-    try:
-        response = client.models.generate_content(
-            model="gemini-3.8-flash",
-            contents=[image_part, prompt],
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json"
+    MODELS_TO_TRY = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash"]
+    response = None
+    last_error = None
+
+    for model_name in MODELS_TO_TRY:
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=[image_part, prompt],
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json"
+                )
             )
-        )
-    except Exception as e:
+            break
+        except Exception as e:
+            last_error = e
+            st.warning(f"{model_name} unavailable, trying next model...")
+            continue
+
+    if response is None:
         import traceback
-        st.error(f"Gemini API error: {type(e).__name__}: {str(e)}")
+        st.error(f"All models failed. Last error: {str(last_error)}")
         st.code(traceback.format_exc())
         return None
 
